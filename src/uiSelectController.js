@@ -40,6 +40,9 @@ uis.controller('uiSelectCtrl',
   ctrl.lockChoiceExpression = undefined; // Initialized inside uiSelectMatch directive link function
   ctrl.clickTriggeredSelect = false;
   ctrl.$filter = $filter;
+  ctrl.shouldRemove = function(selectedItems, challenger){
+    return selectedItems && selectedItems.indexOf(challenger) < 0;
+  };
 
   ctrl.searchInput = $element.querySelectorAll('input.ui-select-search');
   if (ctrl.searchInput.length !== 1) {
@@ -177,7 +180,7 @@ uis.controller('uiSelectCtrl',
         ctrl.setItemsFn(data);
       }else{
         if ( data !== undefined ) {
-          var filteredItems = data.filter(function(i) {return selectedItems && selectedItems.indexOf(i) < 0;});
+          var filteredItems = data.filter(function(i) {return ctrl.shouldRemove(selectedItems, i);});
           ctrl.setItemsFn(filteredItems);
         }
       }
